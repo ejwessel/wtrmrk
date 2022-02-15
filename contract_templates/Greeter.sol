@@ -5,7 +5,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Greeter is Ownable {
     string private greeting;
-    bytes32 private root = <ROOT_HASH>;
+    bytes32 public root = {{ root }};
+    string public sig = "{{ sig }}";
 
     constructor(string memory _greeting) {
         // console.log("Deploying a Greeter with greeting:", _greeting);
