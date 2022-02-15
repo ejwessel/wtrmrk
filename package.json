@@ -6,9 +6,12 @@
     "@nomiclabs/hardhat-web3": "^2.0.0",
     "@openzeppelin/contracts": "^4.5.0",
     "antlr4": "~4.8.0",
+    "chalk": "4.0",
     "dotenv": "^16.0.0",
     "ethereum-waffle": "^3.4.0",
-    "ethers": "^5.5.4"
+    "ethers": "^5.5.4",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.2.27"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-solpp": "^2.0.0",
@@ -17,6 +20,7 @@
   "scripts": {
     "clean": "hardhat clean",
     "compile": "hardhat compile",
-    "npx-compile": "npx hardhat compile"
+    "npx-compile": "npx hardhat compile",
+    "construct": "hardhat run scripts/construct.js"
   }
 }
