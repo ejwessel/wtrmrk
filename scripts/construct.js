@@ -2,6 +2,7 @@ require('dotenv').config()
 const hre = require("hardhat");
 const { ethers } = hre
 const { merklize, getProof } = require('./utilities/merkle')
+const { setupArchiver } = require('./utilities/archive')
 const { renderFile } = require('template-file')
 const fs = require("fs-extra");
 const { exit } = require('process');
@@ -64,6 +65,7 @@ async function main() {
   fs.copySync('./scripts/deconstruct.js', 'outputs/deconstruct.js')
 
   //zip flattened contracts
+  await setupArchiver()
 
   //steganographically add to the chosen image
 }
