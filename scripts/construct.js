@@ -5,43 +5,49 @@ const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/me
 const { setupArchiver } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { writeFileFromTemplate } = require('./utilities/template')
-const { renderFile } = require('template-file')
 const fs = require("fs-extra");
 const chalk = require('chalk')
-const { spawn } = require('child_process');
+
+const archiveDir = 'archive/'
+const archiveWorkspace = 'archiveWorkspace/'
+const contractTemplateDir = 'contract_templates/'
+const contractDir = 'contracts/'
+const contractFlattenedDir = 'cache/solpp-generated-contracts'
 
 async function main() {
-  //merkle
   const addresses = process.env.ADDRESSES.split(',')
   const { tree, root } = merklize(addresses)
   console.log(`root hash: ${chalk.green(root)}`)
   console.log('tree')
   console.log(tree.toString())
 
+  if (!fs.existsSync(archiveWorkspace)) {
+    fs.mkdirSync(archiveWorkspace)
+    console.log('Created archive workspace')
+  }
+
   //write the signature and proofs to file
   const proofObj = createProofsObj(addresses)
+  console.log('proof mapping created')
 
   //NOTE: reads signers from hardhat.config.js
   const accounts = await ethers.getSigners();
   const signer = accounts[0]
   const sig = await signer.signMessage(JSON.stringify(proofObj))
-  console.log('proof signature')
-  console.log(chalk.green(sig))
   proofObj['sig'] = sig
-  console.log('proof mapping')
-  console.log(proofObj)
+  console.log('signature added to proof mapping')
 
-  await writeSignedProofs(proofObj, './outputs/proofs.json',)
-  await writeFileFromTemplate({ root, sig }, './contract_templates/Greeter.sol', './contracts/Greeter.sol',)
+  await writeSignedProofs(proofObj, `${archiveWorkspace}proofs.json`)
+  await writeFileFromTemplate({ root, sig }, `${contractTemplateDir}Greeter.sol`, `${contractDir}Greeter.sol`)
 
   // await hre.run('compile');
   // copy flattened contracts and deconstruct.js
-  fs.copySync('./cache/solpp-generated-contracts', 'outputs/')
-  fs.copySync('./scripts/deconstruct.js', 'outputs/deconstruct.js')
+  fs.copySync(contractFlattenedDir, archiveWorkspace)
+  fs.copySync('./scripts/deconstruct.js', `${archiveWorkspace}deconstruct.js`)
 
   //zip flattened contracts
   try {
-    await setupArchiver('outputs/', 'archive/data.zip')
+    await setupArchiver(archiveWorkspace, `${archiveDir}data.zip`)
   } catch (err) {
     console.log(`Error Archiving ${err}`)
     throw err
@@ -49,7 +55,7 @@ async function main() {
 
   //steganographically add to the chosen image
   try {
-    await execute('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', 'archive/data.zip', '--result', 'test.png'])
+    await execute('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', `${archiveDir}data.zip`, '--result', 'test.png'])
   } catch (err) {
     console.log(`Error Steganographic write ${err}`)
     throw err

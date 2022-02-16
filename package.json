@@ -21,7 +21,7 @@
     "hardhat": "^2.8.4"
   },
   "scripts": {
-    "clean": "hardhat clean && rm -rf outputs/* && rm -rf archive/*",
+    "clean": "hardhat clean && rm -rf archiveWorkspace/* && rm -rf archive/*",
     "compile": "hardhat compile",
     "npx-compile": "npx hardhat compile",
     "construct": "hardhat run scripts/construct.js"

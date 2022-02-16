@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const chalk = require('chalk')
 
 function merklize(elements) {
-  console.log('elements to merkelize:')
+  console.log('Elements to merkelize:')
   console.log(chalk.yellow(elements.toString()))
   tree = new MerkleTree(elements, keccak256, { hashLeaves: true, sortPairs: true })
   return { tree, root: tree.getHexRoot() }
@@ -29,7 +29,7 @@ async function writeSignedProofs(proofObj, destinationPath) {
   try {
     const data = JSON.stringify(proofObj, null, 2)
     fs.writeFileSync(destinationPath, data)
-    console.log(chalk.green('Created proofs.json'))
+    console.log(`Created: ${chalk.green('proofs.json')}`)
     //file written successfully
   } catch (err) {
     console.log(`Error writing proofs.json ${err}`)
