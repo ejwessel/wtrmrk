@@ -1,6 +1,6 @@
 require('dotenv').config()
 const hre = require("hardhat");
-const { ethers } = hre
+const { ethers, network } = hre
 const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
@@ -42,6 +42,19 @@ async function main() {
   const nft = await nftFactory.connect(deployer).deploy('hello')
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
+
+  // verify the contract block explorer
+  if (network.name !== 'localhost' && network.name !== 'hardhat') {
+    await hre.run("verify:verify", {
+      address: nft.address,
+      constructorArguments: [
+        // name,
+        // symbol,
+        // provenance,
+        // maxSupply
+      ]
+    })
+  }
 }
 
 main()

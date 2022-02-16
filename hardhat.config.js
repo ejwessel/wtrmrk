@@ -3,7 +3,7 @@ require("dotenv").config();
 require("@nomiclabs/hardhat-waffle");
 require('@nomiclabs/hardhat-web3');
 require("@nomiclabs/hardhat-solpp");
-
+require("@nomiclabs/hardhat-etherscan");
 
 function getNetworkUrl(networkName) {
   const alchemyKey = process.env.ALCHEMY_API_KEY || "";
@@ -29,6 +29,14 @@ module.exports = {
   },
   mocha: {
     timeout: 1000000,
+  },
+  etherscan: {
+    apiKey: {
+      mainnet: process.env.ETHERSCAN_API_KEY,
+      bsc: process.env.BSCSCAN_API_KEY,
+      polygon: process.env.POLYGONSCAN_API_KEY,
+      avalanche: process.env.SNOWTRACE_API_KEY,
+    },
   },
   solpp: {
     "cwd": "./contracts",
