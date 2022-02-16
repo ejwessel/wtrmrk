@@ -25,7 +25,11 @@ async function main() {
   const accounts = await ethers.getSigners();
   const signer = accounts[0]
   const sig = await signer.signMessage(JSON.stringify(proofObj))
+  console.log('proof signature')
+  console.log(chalk.green(sig))
   proofObj['sig'] = sig
+  console.log('proof mapping')
+  console.log(proofObj)
 
   await writeSignedProofs(proofObj, './outputs/proofs.json',)
   await writeFileFromTemplate({ root, sig }, './contract_templates/Greeter.sol', './contracts/Greeter.sol',)
