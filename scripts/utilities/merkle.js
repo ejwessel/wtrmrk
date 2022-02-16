@@ -37,9 +37,19 @@ async function writeSignedProofs(proofObj, destinationPath) {
   }
 }
 
+function extractProofFromFile(proofPath, address) {
+  const rawJson = fs.readFileSync(proofPath)
+  const proofs = JSON.parse(rawJson)
+  const deploymentProof = proofs[address] ? proofs[address] : ''
+  console.log(`proof: ${chalk.green(deploymentProof)}`)
+  return deploymentProof
+
+}
+
 module.exports = {
   merklize,
   getProof,
   createProofsObj,
-  writeSignedProofs
+  writeSignedProofs,
+  extractProofFromFile
 }

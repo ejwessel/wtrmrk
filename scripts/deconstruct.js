@@ -1,12 +1,13 @@
 require('dotenv').config()
 const hre = require("hardhat");
 const { ethers } = hre
-const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/merkle')
+const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { writeFileFromTemplate } = require('./utilities/template')
 const fs = require("fs-extra");
 const chalk = require('chalk');
+const { ConsoleErrorListener } = require('antlr4/error/ErrorListener');
 
 const archiveDir = 'archive/'
 const archiveWorkspace = 'archiveWorkspace/'
@@ -31,6 +32,7 @@ async function main() {
   //steganographically extract archive
   try {
     await execute('stegify', ['decode', '--carrier', 'test.png', '--result', `${archiveDir}data.zip`])
+    console.log(chalk.green('Success! Image Decoded'))
   } catch (err) {
     console.log(`Error Steganographic write ${err}`)
     throw err
@@ -43,6 +45,7 @@ async function main() {
   fs.copySync(`${archiveWorkspace}Greeter.sol`, `${contractDir}Greeter.sol`)
 
   await hre.run('compile')
+  console.log('Compiling extracted contract')
 
   // conditional for deployment
   if (!process.env.DEPLOY) {
@@ -50,17 +53,12 @@ async function main() {
   }
 
   const [deployer] = await hre.ethers.getSigners();
-
-  // read out the proof from the proofs.json
-  const rawJson = fs.readFileSync(`${archiveWorkspace}proofs.json`)
-  const proofs = JSON.parse(rawJson)
-  const deploymentProof = proofs[deployer.address] ? proofs[deployer.address] : ''
-  console.log(`proof: ${deploymentProof}`)
+  const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
 
   const nftFactory = await hre.ethers.getContractFactory("Greeter");
   const nft = await nftFactory.connect(deployer).deploy('hello')
   await nft.deployed()
-  console.log("NFT Contract deployed to:", nft.address);
+  console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
 }
 
 main()

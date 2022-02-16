@@ -34,7 +34,7 @@ const createArchive = (directoryToZip, outputPath) => new Promise((resolve, reje
 async function unarchive(directoryToUnzip, outputPath) {
   try {
     await extract(directoryToUnzip, { dir: outputPath })
-    console.log('Extraction complete')
+    console.log(`Extracted ${chalk.green(directoryToUnzip)} to ${chalk.green(outputPath)}`)
   } catch (err) {
     console.log(`Error Unarchiving ${err}`)
     throw err
