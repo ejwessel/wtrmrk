@@ -1,29 +1,32 @@
 const fs = require("fs-extra");
 const archiver = require('archiver');
+const chalk = require('chalk')
 
-// async function setupArchiver() {
-const setupArchiver = (instance) => new Promise((resolve) => {
-  const filename = 'archive/data.zip'
+const setupArchiver = (directoryToZip, outputPath) => new Promise((resolve, reject) => {
   const archive = archiver('zip', {
     zlib: { level: 9 } // Sets the compression level.
   });
-  const output = fs.createWriteStream(filename);
+  const output = fs.createWriteStream(outputPath);
   archive.on('warning', function (err) {
     if (err.code === 'ENOENT') {
       // log warning
     } else {
-      // throw error
-      throw err;
+      reject(err)
     }
   });
   archive.on('error', function (err) {
-    throw err;
+    reject(err)
   });
   output.on('end', function () {
     console.log('Data has been drained');
   });
+  output.on('close', () => {
+    console.log(`Created: "${outputPath}", total bytes: ${archive.pointer()}.`);
+    resolve();
+  });
+
   archive.pipe(output);
-  archive.directory('outputs/', false)
+  archive.directory(directoryToZip, false)
   archive.finalize();
 })
 

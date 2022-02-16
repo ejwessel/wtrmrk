@@ -5,15 +5,14 @@ const { merklize, getProof } = require('./utilities/merkle')
 const { setupArchiver } = require('./utilities/archive')
 const { renderFile } = require('template-file')
 const fs = require("fs-extra");
-const { exit } = require('process');
 const chalk = require('chalk')
-
+const { spawn } = require('child_process');
 
 async function main() {
   //merkle
   const addresses = process.env.ADDRESSES.split(',')
   const { tree, root } = merklize(addresses)
-  console.log(`root hash: ${root}`)
+  console.log(`root hash: ${chalk.green(root)}`)
   console.log('tree')
   console.log(tree.toString())
 
@@ -26,10 +25,10 @@ async function main() {
 
   //NOTE: reads signers from hardhat.config.js
   const accounts = await ethers.getSigners();
-  console.log('proof signature')
   const signer = accounts[0]
   const sig = await signer.signMessage(JSON.stringify(proofObj))
-  console.log(sig)
+  console.log('proof signature')
+  console.log(chalk.green(sig))
   proofObj['sig'] = sig
   console.log('proof mapping')
   console.log(proofObj)
@@ -41,7 +40,7 @@ async function main() {
     //file written successfully
   } catch (err) {
     console.log(`Error writing proofs.json ${err}`)
-    exit(0)
+    throw err
   }
 
   //replace template contract code
@@ -56,7 +55,7 @@ async function main() {
     console.log(chalk.green('Created templated files'))
   } catch (err) {
     console.log(`Error templating ${err}`)
-    exit(0)
+    throw err
   }
 
   // await hre.run('compile');
@@ -65,9 +64,33 @@ async function main() {
   fs.copySync('./scripts/deconstruct.js', 'outputs/deconstruct.js')
 
   //zip flattened contracts
-  await setupArchiver()
+  try {
+    await setupArchiver('outputs/', 'archive/data.zip')
+  } catch (err) {
+    console.log(`Error Archiving ${err}`)
+    throw err
+  }
 
   //steganographically add to the chosen image
+  // const ls = spawn('stegify', ['--help']);
+  const ls = spawn('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', 'archive/data.zip', '--result', 'test.png']);
+  let data = "";
+  for await (const chunk of ls.stdout) {
+    console.log('stdout chunk: ' + chunk);
+    data += chunk;
+  }
+  let error = "";
+  for await (const chunk of ls.stderr) {
+    console.error('stderr chunk: ' + chunk);
+    error += chunk;
+  }
+  const exitCode = await new Promise((resolve, reject) => {
+    ls.on('close', resolve);
+  });
+
+  if (exitCode) {
+    throw new Error(`subprocess error exit ${exitCode}, ${error}`);
+  }
 }
 
 main()
