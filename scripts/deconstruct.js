@@ -4,10 +4,8 @@ const { ethers } = hre
 const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
-const { writeFileFromTemplate } = require('./utilities/template')
 const fs = require("fs-extra");
 const chalk = require('chalk');
-const { ConsoleErrorListener } = require('antlr4/error/ErrorListener');
 
 const archiveDir = 'archive/'
 const archiveWorkspace = 'archiveWorkspace/'
@@ -52,10 +50,10 @@ async function main() {
     exit(0)
   }
 
-  const [deployer] = await hre.ethers.getSigners();
+  const [deployer] = await ethers.getSigners();
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
 
-  const nftFactory = await hre.ethers.getContractFactory("Greeter");
+  const nftFactory = await ethers.getContractFactory("Greeter");
   const nft = await nftFactory.connect(deployer).deploy('hello')
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
