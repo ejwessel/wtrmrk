@@ -3,6 +3,7 @@ const hre = require("hardhat");
 const { ethers } = hre
 const { merklize, getProof } = require('./utilities/merkle')
 const { setupArchiver } = require('./utilities/archive')
+const { execute } = require('./utilities/execute')
 const { renderFile } = require('template-file')
 const fs = require("fs-extra");
 const chalk = require('chalk')
@@ -72,25 +73,14 @@ async function main() {
   }
 
   //steganographically add to the chosen image
-  // const ls = spawn('stegify', ['--help']);
-  const ls = spawn('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', 'archive/data.zip', '--result', 'test.png']);
-  let data = "";
-  for await (const chunk of ls.stdout) {
-    console.log('stdout chunk: ' + chunk);
-    data += chunk;
+  try {
+    await execute('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', 'archive/data.zip', '--result', 'test.png'])
+  } catch (err) {
+    console.log(`Error Steganographic write ${err}`)
+    throw err
   }
-  let error = "";
-  for await (const chunk of ls.stderr) {
-    console.error('stderr chunk: ' + chunk);
-    error += chunk;
-  }
-  const exitCode = await new Promise((resolve, reject) => {
-    ls.on('close', resolve);
-  });
 
-  if (exitCode) {
-    throw new Error(`subprocess error exit ${exitCode}, ${error}`);
-  }
+  console.log(chalk.green("Success! Image Encoded"))
 }
 
 main()

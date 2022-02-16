@@ -21,7 +21,7 @@ const setupArchiver = (directoryToZip, outputPath) => new Promise((resolve, reje
     console.log('Data has been drained');
   });
   output.on('close', () => {
-    console.log(`Created: "${outputPath}", total bytes: ${archive.pointer()}.`);
+    console.log(`Created: "${chalk.green(outputPath)}", total bytes: ${chalk.yellow(archive.pointer())}.`);
     resolve();
   });
 
