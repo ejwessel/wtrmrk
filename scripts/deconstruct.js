@@ -41,6 +41,26 @@ async function main() {
   await unarchive(`${archiveDir}data.zip`, `${path.join('/')}/${archiveWorkspace}`)
 
   fs.copySync(`${archiveWorkspace}Greeter.sol`, `${contractDir}Greeter.sol`)
+
+  await hre.run('compile')
+
+  // conditional for deployment
+  if (!process.env.DEPLOY) {
+    exit(0)
+  }
+
+  const [deployer] = await hre.ethers.getSigners();
+
+  // read out the proof from the proofs.json
+  const rawJson = fs.readFileSync(`${archiveWorkspace}proofs.json`)
+  const proofs = JSON.parse(rawJson)
+  const deploymentProof = proofs[deployer.address] ? proofs[deployer.address] : ''
+  console.log(`proof: ${deploymentProof}`)
+
+  const nftFactory = await hre.ethers.getContractFactory("Greeter");
+  const nft = await nftFactory.connect(deployer).deploy('hello')
+  await nft.deployed()
+  console.log("NFT Contract deployed to:", nft.address);
 }
 
 main()
