@@ -22,7 +22,7 @@
     "hardhat": "^2.8.4"
   },
   "scripts": {
-    "clean": "hardhat clean && rm -rf archiveWorkspace/* && rm -rf archive/* && rm -rf contracts/",
+    "clean": "hardhat clean && rm -rf archiveWorkspace/* && rm -rf archive/* && rm -rf contracts/*",
     "compile": "hardhat compile",
     "npx-compile": "npx hardhat compile",
     "construct": "hardhat run scripts/construct.js",

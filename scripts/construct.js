@@ -4,6 +4,7 @@ const { ethers } = hre
 const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/merkle')
 const { createArchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
+const { setupWorkspaces } = require('./utilities/workspace')
 const { writeFileFromTemplate } = require('./utilities/template')
 const fs = require("fs-extra");
 const chalk = require('chalk')
@@ -21,18 +22,7 @@ async function main() {
   console.log('tree')
   console.log(tree.toString())
 
-  if (!fs.existsSync(archiveDir)) {
-    fs.mkdirSync(archiveDir)
-    console.log('Created archive dir')
-  }
-  if (!fs.existsSync(archiveWorkspace)) {
-    fs.mkdirSync(archiveWorkspace)
-    console.log('Created archive workspace')
-  }
-  if (!fs.existsSync(contractDir)) {
-    fs.mkdirSync(contractDir)
-    console.log('Created contracts dir')
-  }
+  setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
 
   //write the signature and proofs to file
   const proofObj = createProofsObj(addresses)
@@ -48,7 +38,7 @@ async function main() {
   await writeSignedProofs(proofObj, `${archiveWorkspace}proofs.json`)
   await writeFileFromTemplate({ root, sig }, `${contractTemplateDir}Greeter.sol`, `${contractDir}Greeter.sol`)
 
-  // await hre.run('compile');
+  await hre.run('compile');
   // copy flattened contracts and deconstruct.js
   fs.copySync(contractFlattenedDir, archiveWorkspace)
   fs.copySync('./scripts/deconstruct.js', `${archiveWorkspace}deconstruct.js`)
