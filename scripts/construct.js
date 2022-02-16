@@ -1,7 +1,7 @@
 require('dotenv').config()
 const hre = require("hardhat");
 const { ethers } = hre
-const { merklize, getProof } = require('./utilities/merkle')
+const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/merkle')
 const { setupArchiver } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { writeFileFromTemplate } = require('./utilities/template')
@@ -19,33 +19,15 @@ async function main() {
   console.log(tree.toString())
 
   //write the signature and proofs to file
-  const proofObj = { sig: '', mapping: {} }
-  addresses.forEach((address) => {
-    const proof = getProof(tree, address)
-    proofObj['mapping'][address] = proof
-  })
+  const proofObj = createProofsObj(addresses)
 
   //NOTE: reads signers from hardhat.config.js
   const accounts = await ethers.getSigners();
   const signer = accounts[0]
   const sig = await signer.signMessage(JSON.stringify(proofObj))
-  console.log('proof signature')
-  console.log(chalk.green(sig))
   proofObj['sig'] = sig
-  console.log('proof mapping')
-  console.log(proofObj)
 
-  try {
-    const data = JSON.stringify(proofObj, null, 2)
-    fs.writeFileSync('./outputs/proofs.json', data)
-    console.log(chalk.green('Created proofs.json'))
-    //file written successfully
-  } catch (err) {
-    console.log(`Error writing proofs.json ${err}`)
-    throw err
-  }
-
-  //replace template contract code
+  await writeSignedProofs(proofObj, './outputs/proofs.json',)
   await writeFileFromTemplate({ root, sig }, './contract_templates/Greeter.sol', './contracts/Greeter.sol',)
 
   // await hre.run('compile');
