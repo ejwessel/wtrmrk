@@ -6,23 +6,18 @@ const { createArchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
 const { writeFileFromTemplate } = require('./utilities/template')
+const { archiveDir, archiveWorkspace, contractDir, contractTemplateDir, contractFlattenedDir } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk')
 
-const archiveDir = 'archive/'
-const archiveWorkspace = 'archiveWorkspace/'
-const contractTemplateDir = 'contract_templates/'
-const contractDir = 'contracts/'
-const contractFlattenedDir = 'cache/solpp-generated-contracts'
-
 async function main() {
+  setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
+
   const addresses = process.env.ADDRESSES.split(',')
   const { tree, root } = merklize(addresses)
   console.log(`root hash: ${chalk.green(root)}`)
   console.log('tree')
   console.log(tree.toString())
-
-  setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
 
   //write the signature and proofs to file
   const proofObj = createProofsObj(addresses)
@@ -58,7 +53,6 @@ async function main() {
     console.log(`Error Steganographic write ${err}`)
     throw err
   }
-
   console.log(chalk.green("Success! Image Encoded"))
 }
 

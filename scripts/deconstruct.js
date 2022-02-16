@@ -4,28 +4,13 @@ const { ethers } = hre
 const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
+const { setupWorkspaces } = require('./utilities/workspace')
+const { archiveDir, archiveWorkspace, contractDir } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk');
 
-const archiveDir = 'archive/'
-const archiveWorkspace = 'archiveWorkspace/'
-const contractTemplateDir = 'contract_templates/'
-const contractDir = 'contracts/'
-const contractFlattenedDir = 'cache/solpp-generated-contracts'
-
 async function main() {
-  if (!fs.existsSync(archiveDir)) {
-    fs.mkdirSync(archiveDir)
-    console.log('Created archive dir')
-  }
-  if (!fs.existsSync(archiveWorkspace)) {
-    fs.mkdirSync(archiveWorkspace)
-    console.log('Created archive workspace')
-  }
-  if (!fs.existsSync(contractDir)) {
-    fs.mkdirSync(contractDir)
-    console.log('Created contracts dir')
-  }
+  setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
 
   //steganographically extract archive
   try {
