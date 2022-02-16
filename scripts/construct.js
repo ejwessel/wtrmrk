@@ -6,7 +6,7 @@ const { createArchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
 const { writeFileFromTemplate } = require('./utilities/template')
-const { archiveDir, archiveWorkspace, contractDir, contractTemplateDir, contractFlattenedDir } = require('./constants')
+const { archiveDir, archiveWorkspace, contractDir, contractTemplateDir, contractFlattenedDir, nftContractName } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk')
 
@@ -31,7 +31,7 @@ async function main() {
   console.log('signature added to proof mapping')
 
   await writeSignedProofs(proofObj, `${archiveWorkspace}proofs.json`)
-  await writeFileFromTemplate({ root, sig }, `${contractTemplateDir}Greeter.sol`, `${contractDir}Greeter.sol`)
+  await writeFileFromTemplate({ root, sig }, `${contractTemplateDir}${nftContractName}.sol`, `${contractDir}${nftContractName}.sol`)
 
   await hre.run('compile');
   // copy flattened contracts and deconstruct.js

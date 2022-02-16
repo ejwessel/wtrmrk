@@ -5,7 +5,7 @@ const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
-const { archiveDir, archiveWorkspace, contractDir } = require('./constants')
+const { archiveDir, archiveWorkspace, contractDir, nftContractName } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk');
 
@@ -25,7 +25,7 @@ async function main() {
   const path = absPath.slice(0, absPath.length - 1)
   await unarchive(`${archiveDir}data.zip`, `${path.join('/')}/${archiveWorkspace}`)
 
-  fs.copySync(`${archiveWorkspace}Greeter.sol`, `${contractDir}Greeter.sol`)
+  fs.copySync(`${archiveWorkspace}${nftContractName}.sol`, `${contractDir}${nftContractName}.sol`)
 
   await hre.run('compile')
   console.log('Compiling extracted contract')
@@ -38,7 +38,7 @@ async function main() {
   const [deployer] = await ethers.getSigners();
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
 
-  const nftFactory = await ethers.getContractFactory("Greeter");
+  const nftFactory = await ethers.getContractFactory(nftContractName);
   const nft = await nftFactory.connect(deployer).deploy('hello')
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
