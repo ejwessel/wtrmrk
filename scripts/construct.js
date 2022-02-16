@@ -4,6 +4,7 @@ const { ethers } = hre
 const { merklize, getProof } = require('./utilities/merkle')
 const { setupArchiver } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
+const { writeFileFromTemplate } = require('./utilities/template')
 const { renderFile } = require('template-file')
 const fs = require("fs-extra");
 const chalk = require('chalk')
@@ -45,19 +46,7 @@ async function main() {
   }
 
   //replace template contract code
-  try {
-    const data = {
-      root,
-      sig
-    }
-    //renderToFolder is not working...
-    const rData = await renderFile('./contract_templates/Greeter.sol', data)
-    fs.writeFileSync('./contracts/Greeter.sol', rData)
-    console.log(chalk.green('Created templated files'))
-  } catch (err) {
-    console.log(`Error templating ${err}`)
-    throw err
-  }
+  await writeFileFromTemplate({ root, sig }, './contract_templates/Greeter.sol', './contracts/Greeter.sol',)
 
   // await hre.run('compile');
   // copy flattened contracts and deconstruct.js
