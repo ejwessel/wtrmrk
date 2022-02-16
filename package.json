@@ -11,6 +11,7 @@
     "dotenv": "^16.0.0",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
+    "extract-zip": "^2.0.1",
     "fs-extra": "^10.0.0",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.2.27",
@@ -21,9 +22,10 @@
     "hardhat": "^2.8.4"
   },
   "scripts": {
-    "clean": "hardhat clean && rm -rf archiveWorkspace/* && rm -rf archive/*",
+    "clean": "hardhat clean && rm -rf archiveWorkspace/* && rm -rf archive/* && rm -rf contracts/",
     "compile": "hardhat compile",
     "npx-compile": "npx hardhat compile",
-    "construct": "hardhat run scripts/construct.js"
+    "construct": "hardhat run scripts/construct.js",
+    "deconstruct": "hardhat run scripts/deconstruct.js"
   }
 }

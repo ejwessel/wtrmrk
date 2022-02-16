@@ -2,7 +2,7 @@ require('dotenv').config()
 const hre = require("hardhat");
 const { ethers } = hre
 const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/merkle')
-const { setupArchiver } = require('./utilities/archive')
+const { createArchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { writeFileFromTemplate } = require('./utilities/template')
 const fs = require("fs-extra");
@@ -21,9 +21,17 @@ async function main() {
   console.log('tree')
   console.log(tree.toString())
 
+  if (!fs.existsSync(archiveDir)) {
+    fs.mkdirSync(archiveDir)
+    console.log('Created archive dir')
+  }
   if (!fs.existsSync(archiveWorkspace)) {
     fs.mkdirSync(archiveWorkspace)
     console.log('Created archive workspace')
+  }
+  if (!fs.existsSync(contractDir)) {
+    fs.mkdirSync(contractDir)
+    console.log('Created contracts dir')
   }
 
   //write the signature and proofs to file
@@ -47,7 +55,7 @@ async function main() {
 
   //zip flattened contracts
   try {
-    await setupArchiver(archiveWorkspace, `${archiveDir}data.zip`)
+    await createArchive(archiveWorkspace, `${archiveDir}data.zip`)
   } catch (err) {
     console.log(`Error Archiving ${err}`)
     throw err

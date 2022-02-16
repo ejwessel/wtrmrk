@@ -1,8 +1,9 @@
 const fs = require("fs-extra");
 const archiver = require('archiver');
+const extract = require('extract-zip')
 const chalk = require('chalk')
 
-const setupArchiver = (directoryToZip, outputPath) => new Promise((resolve, reject) => {
+const createArchive = (directoryToZip, outputPath) => new Promise((resolve, reject) => {
   const archive = archiver('zip', {
     zlib: { level: 9 } // Sets the compression level.
   });
@@ -30,6 +31,17 @@ const setupArchiver = (directoryToZip, outputPath) => new Promise((resolve, reje
   archive.finalize();
 })
 
+async function unarchive(directoryToUnzip, outputPath) {
+  try {
+    await extract(directoryToUnzip, { dir: outputPath })
+    console.log('Extraction complete')
+  } catch (err) {
+    console.log(`Error Unarchiving ${err}`)
+    throw err
+  }
+}
+
 module.exports = {
-  setupArchiver
+  createArchive,
+  unarchive
 }
