@@ -38,7 +38,7 @@ contract ERC721Image is ERC721, Ownable {
 
     function verify(bytes32[] memory proof, address to)
         public
-        view
+        pure
         returns (bool)
     {
         return MerkleProof.verify(proof, root, keccak256(abi.encodePacked(to)));

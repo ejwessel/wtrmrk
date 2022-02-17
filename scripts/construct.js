@@ -9,6 +9,7 @@ const { writeFileFromTemplate } = require('./utilities/template')
 const { archiveDir, archiveWorkspace, contractDir, contractTemplateDir, contractFlattenedDir, nftContractName } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk')
+const replace = require('replace-in-file');
 
 async function main() {
   setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
@@ -43,7 +44,20 @@ async function main() {
     `${contractTemplateDir}${nftContractName}.sol`, `${contractDir}${nftContractName}.sol`
   )
 
-  await hre.run('compile');
+  try {
+    await hre.run("compile");
+  } catch (err) {
+    console.log('fixing flatten issue with spdx')
+    //remove spdx issues from flattened file
+    const options = {
+      files: `${contractFlattenedDir}${nftContractName}.sol`,
+      from: /\/\/ SPDX-License-Identifier: MIT/g,
+      to: '',
+    };
+    results = await replace(options)
+  }
+
+
   // copy flattened contracts and deconstruct.js
   fs.copySync(contractFlattenedDir, archiveWorkspace)
   // fs.copySync('./scripts/deconstruct.js', `${archiveWorkspace}deconstruct.js`)
