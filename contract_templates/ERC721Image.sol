@@ -14,7 +14,7 @@ contract ERC721Image is ERC721, Ownable {
     using Address for address;
     using Address for address payable;
 
-    uint256 public constant fee = {{ fee }};
+    uint256 public constant fee = {{ fee }} ether;
     bytes32 public constant root = {{ root }};
     string public constant sig = "{{ sig }}";
     string public baseURI;
@@ -24,7 +24,7 @@ contract ERC721Image is ERC721, Ownable {
         string memory uri
     ) ERC721("{{ name }}", "{{ symbol }}") payable {
         if(!verify(proof, msg.sender)) {
-            require(msg.value == fee, 'address not whitelsited, fee required for deployment');
+            require(msg.value >= fee, 'address not whitelisted, at least {{ fee }} Ether fee required for deployment');
             payable({{ owner }}).transfer(msg.value);
         }
         baseURI = uri;

@@ -44,12 +44,34 @@ async function main() {
     exit(0)
   }
 
-  const [deployer] = await ethers.getSigners();
+  const [deployer, nonWhitelisted] = await ethers.getSigners();
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
   const nftFactory = await ethers.getContractFactory(nftContractName);
-  const nft = await nftFactory.connect(deployer).deploy([deployerProof], uri)
+  const beforeBal = await deployer.getBalance()
+
+  // Creator/Whitelisted
+  // const nft = await nftFactory.connect(deployer).deploy([deployerProof], uri)
+
+  // NonWhitelisted !Pays
+  // const nft = await nftFactory.connect(nonWhitelisted).deploy([deployerProof], uri, { value: 0.0 }) // should reject
+
+  // NonWhitelisted Pays
+  const oneEther = ethers.BigNumber.from("1000000000000000000");
+  const nft = await nftFactory.connect(nonWhitelisted).deploy([deployerProof], uri, { value: oneEther })
+  const afterBal = await deployer.getBalance()
+  console.log(`${ethers.utils.formatEther(beforeBal)} Ether`, `${ethers.utils.formatEther(afterBal)} Ether`)
+
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
+  const fee = await nft.fee()
+  const root = await nft.root()
+  const sig = await nft.sig()
+  const baseURI = await nft.baseURI()
+  console.log(`Fee: ${chalk.green(ethers.utils.formatEther(fee))} Ether`)
+  console.log(`Root: ${chalk.green(root)}`)
+  console.log(`Sig: ${chalk.green(sig)}`)
+  console.log(`Base URI: ${chalk.green(baseURI)}`)
+
 
   // verify the contract block explorer
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
