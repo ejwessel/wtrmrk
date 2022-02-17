@@ -54,7 +54,14 @@ async function main() {
       from: /\/\/ SPDX-License-Identifier: MIT/g,
       to: '',
     };
-    results = await replace(options)
+    try {
+      const results = await replace(options)
+      console.log('Replacement results:', results);
+    }
+    catch (error) {
+      console.error('Error handling SPDX:', error);
+      throw error
+    }
   }
 
 
