@@ -5,12 +5,19 @@ const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
+const pinataSDK = require('@pinata/sdk');
+
 const { archiveDir, archiveWorkspace, contractDir, nftContractName } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk');
 
 async function main() {
   setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
+
+  const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECRET_KEY);
+
+  const result = pinata.pinFromFS('test.png')
+  console.log(result)
 
   //steganographically extract archive
   try {

@@ -64,7 +64,6 @@ async function main() {
     throw err
   }
   console.log(chalk.green("Success! Image Encoded"))
-  console.log("Upload Image to IPFS and save CID"
 }
 
 main()
