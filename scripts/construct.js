@@ -31,7 +31,17 @@ async function main() {
   console.log('signature added to proof mapping')
 
   await writeSignedProofs(proofObj, `${archiveWorkspace}proofs.json`)
-  await writeFileFromTemplate({ root, sig }, `${contractTemplateDir}${nftContractName}.sol`, `${contractDir}${nftContractName}.sol`)
+  await writeFileFromTemplate(
+    {
+      root,
+      sig,
+      owner: signer.address,
+      fee: 1,
+      name: 'Pi',
+      symbol: 'PI'
+    },
+    `${contractTemplateDir}${nftContractName}.sol`, `${contractDir}${nftContractName}.sol`
+  )
 
   await hre.run('compile');
   // copy flattened contracts and deconstruct.js
@@ -54,6 +64,7 @@ async function main() {
     throw err
   }
   console.log(chalk.green("Success! Image Encoded"))
+  console.log("Upload Image to IPFS and save CID"
 }
 
 main()

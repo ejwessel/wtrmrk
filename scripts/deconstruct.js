@@ -37,9 +37,10 @@ async function main() {
 
   const [deployer] = await ethers.getSigners();
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
+  const uri = `https://ipfs.io/ipfs/${process.env.CID}`
 
   const nftFactory = await ethers.getContractFactory(nftContractName);
-  const nft = await nftFactory.connect(deployer).deploy('hello')
+  const nft = await nftFactory.connect(deployer).deploy(deployerProof, uri)
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
 
@@ -47,12 +48,7 @@ async function main() {
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
     await hre.run("verify:verify", {
       address: nft.address,
-      constructorArguments: [
-        // name,
-        // symbol,
-        // provenance,
-        // maxSupply
-      ]
+      constructorArguments: [deployerProof, uri]
     })
   }
 }

@@ -3,7 +3,7 @@ const archiveWorkspace = 'archiveWorkspace/'
 const contractTemplateDir = 'contract_templates/'
 const contractDir = 'contracts/'
 const contractFlattenedDir = 'cache/solpp-generated-contracts'
-const nftContractName = 'Greeter'
+const nftContractName = 'ERC721Image'
 
 module.exports = {
   archiveDir,
