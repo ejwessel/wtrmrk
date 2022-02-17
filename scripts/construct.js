@@ -4,12 +4,11 @@ const { ethers } = hre
 const { merklize, createProofsObj, writeSignedProofs } = require('./utilities/merkle')
 const { createArchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
-const { setupWorkspaces } = require('./utilities/workspace')
+const { setupWorkspaces, fixSPDXErrors } = require('./utilities/workspace')
 const { writeFileFromTemplate } = require('./utilities/template')
 const { archiveDir, archiveWorkspace, contractDir, contractTemplateDir, contractFlattenedDir, nftContractName } = require('./constants')
 const fs = require("fs-extra");
 const chalk = require('chalk')
-const replace = require('replace-in-file');
 
 async function main() {
   setupWorkspaces([archiveDir, archiveWorkspace, contractDir])
@@ -47,23 +46,10 @@ async function main() {
   try {
     await hre.run("compile");
   } catch (err) {
-    console.log('fixing flatten issue with spdx')
-    //remove spdx issues from flattened file
-    const options = {
-      files: `${contractFlattenedDir}${nftContractName}.sol`,
-      from: /\/\/ SPDX-License-Identifier: MIT/g,
-      to: '',
-    };
-    try {
-      const results = await replace(options)
-      console.log('Replacement results:', results);
-    }
-    catch (error) {
-      console.error('Error handling SPDX:', error);
-      throw error
-    }
+    console.log(chalk.yellow("Fixing flatten issue with SPDX"))
+    await fixSPDXErrors(`${contractFlattenedDir}${nftContractName}.sol`)
+    console.log(chalk.yellow("SPDX Issues Fixed"))
   }
-
 
   // copy flattened contracts and deconstruct.js
   fs.copySync(contractFlattenedDir, archiveWorkspace)
