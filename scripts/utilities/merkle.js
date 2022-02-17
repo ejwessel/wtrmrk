@@ -13,7 +13,7 @@ function merklize(elements) {
 function getProof(tree, address) {
   leaf = keccak256(address)
   proof = tree.getHexProof(leaf)
-  return proof[0] ? proof[0] : ''
+  return proof[0] ? proof[0] : undefined
 }
 
 function createProofsObj(addresses) {
@@ -40,7 +40,7 @@ async function writeSignedProofs(proofObj, destinationPath) {
 function extractProofFromFile(proofPath, address) {
   const rawJson = fs.readFileSync(proofPath)
   const proofs = JSON.parse(rawJson)
-  const deploymentProof = proofs[address] ? proofs[address] : ''
+  const deploymentProof = address in proofs['mapping'] ? proofs['mapping'][address] : `0x${keccak256('none').toString('hex')}`
   console.log(`proof: ${chalk.green(deploymentProof)}`)
   return deploymentProof
 

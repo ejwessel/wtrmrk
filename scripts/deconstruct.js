@@ -16,8 +16,9 @@ async function main() {
 
   const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECRET_KEY);
 
-  const result = pinata.pinFromFS('test.png')
-  console.log(result)
+  const { IpfsHash } = await pinata.pinFromFS('test.png')
+  const uri = `https://ipfs.io/ipfs/${IpfsHash}`
+  console.log(`Image uploaded to IPFS at ${chalk.green(uri)}`)
 
   //steganographically extract archive
   try {
@@ -37,6 +38,7 @@ async function main() {
   await hre.run('compile')
   console.log('Compiling extracted contract')
 
+  console.log(`Deploy: ${chalk.green(process.env.DEPLOY)}`)
   // conditional for deployment
   if (!process.env.DEPLOY) {
     exit(0)
@@ -44,10 +46,8 @@ async function main() {
 
   const [deployer] = await ethers.getSigners();
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
-  const uri = `https://ipfs.io/ipfs/${process.env.CID}`
-
   const nftFactory = await ethers.getContractFactory(nftContractName);
-  const nft = await nftFactory.connect(deployer).deploy(deployerProof, uri)
+  const nft = await nftFactory.connect(deployer).deploy([deployerProof], uri)
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
 
