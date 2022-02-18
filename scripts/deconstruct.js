@@ -6,6 +6,7 @@ const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
 const { verify } = require('./utilities/verify')
+const { sleep } = require('./utilities/time')
 const pinataSDK = require('@pinata/sdk');
 
 const { archiveDir, archiveWorkspace, contractDir, nftContractName } = require('./constants')
@@ -46,22 +47,24 @@ async function main() {
   }
 
   const [deployer, nonWhitelisted] = await ethers.getSigners();
-  const selectedSigner = nonWhitelisted
+  //SELECT HERE
+  const selectedSigner = deployer
+  console.log(`Selected Account: ${chalk.green(selectedSigner.address)}`)
   const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, selectedSigner.address)
   const nftFactory = await ethers.getContractFactory(nftContractName);
   const beforeBal = await deployer.getBalance()
 
   // Case 1: Creator/Whitelisted
-  // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri)
+  const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri)
 
   // Case 2: NonWhitelisted !Pays
   // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: 0.0 }) // should reject
 
   // Case 3: NonWhitelisted Pays
-  const oneEther = ethers.BigNumber.from("1000000000000000000");
-  const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: oneEther })
-  const afterBal = await deployer.getBalance()
-  console.log(`${ethers.utils.formatEther(beforeBal)} Ether`, `${ethers.utils.formatEther(afterBal)} Ether`)
+  // const oneEther = ethers.BigNumber.from("1000000000000000000");
+  // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: oneEther })
+  // const afterBal = await deployer.getBalance()
+  // console.log(`${ethers.utils.formatEther(beforeBal)} Ether`, `${ethers.utils.formatEther(afterBal)} Ether`)
 
   await nft.deployed()
   console.log(`NFT Contract deployed to: ${chalk.green(nft.address)}`);
@@ -79,12 +82,15 @@ async function main() {
 
   // verify the contract block explorer
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
+    console.log(chalk.yellow("Waiting 30s for contract to propogate before verification..."))
+    await sleep(30000)
     await hre.run("verify:verify", {
       address: nft.address,
-      constructorArguments: [deployerProof, uri]
+      constructorArguments: [[deployerProof], uri]
     })
   }
 }
+
 
 main()
   .then(() => process.exit(0))

@@ -13,12 +13,25 @@ function getNetworkUrl(networkName) {
 
 module.exports = {
   networks: {
-    // mainnet: {
-    //   url: getNetworkUrl('mainnet'),
-    //   accounts: [process.env.PRIVATE_KEY],
-    //   baseFeePerGas: 140e9,
-    //   timeout: 1000000,
-    // },
+    // forking is always enabled
+    hardhat: {
+      forking: {
+        url: getNetworkUrl('mainnet'),
+        accounts: [process.env.PRIVATE_KEY]
+      },
+    },
+    mainnet: {
+      url: getNetworkUrl('mainnet'),
+      accounts: [process.env.PRIVATE_KEY],
+      baseFeePerGas: 140e9,
+      timeout: 1000000,
+    },
+    rinkeby: {
+      url: getNetworkUrl('rinkeby'),
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 4e9,
+      timeout: 1000000,
+    },
   },
   solidity: {
     version: "0.8.1",
@@ -33,6 +46,7 @@ module.exports = {
   etherscan: {
     apiKey: {
       mainnet: process.env.ETHERSCAN_API_KEY,
+      rinkeby: process.env.ETHERSCAN_API_KEY,
       bsc: process.env.BSCSCAN_API_KEY,
       polygon: process.env.POLYGONSCAN_API_KEY,
       avalanche: process.env.SNOWTRACE_API_KEY,

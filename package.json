@@ -13,6 +13,7 @@
     "chai": "^4.3.6",
     "chalk": "4.0",
     "dotenv": "^16.0.0",
+    "downloadjs": "^1.4.7",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.4",
     "extract-zip": "^2.0.1",
