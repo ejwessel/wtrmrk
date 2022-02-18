@@ -74,7 +74,8 @@ async function main() {
   console.log(`Sig: ${chalk.green(sig)}`)
   console.log(`Base URI: ${chalk.green(baseURI)}`)
 
-  // await verify(nftContractName, nft.address, selectedSigner)
+  const bytecodeIsVerified = await verify(nftContractName, nft.address, selectedSigner)
+  console.log(`Deployed bytecode matches: ${chalk.green(bytecodeIsVerified)}`)
 
   // verify the contract block explorer
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
