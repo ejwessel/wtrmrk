@@ -5,7 +5,9 @@ const chalk = require('chalk')
 
 function merklize(elements) {
   console.log('Elements to merkelize:')
-  console.log(chalk.yellow(elements.toString()))
+  elements.forEach(element => {
+    console.log(chalk.yellow(element.toString()))
+  })
   tree = new MerkleTree(elements, keccak256, { hashLeaves: true, sortPairs: true })
   return { tree, root: tree.getHexRoot() }
 }

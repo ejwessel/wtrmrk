@@ -36,7 +36,7 @@ async function unarchive(directoryToUnzip, outputPath) {
     await extract(directoryToUnzip, { dir: outputPath })
     console.log(`Extracted ${chalk.green(directoryToUnzip)} to ${chalk.green(outputPath)}`)
     fs.readdirSync(outputPath).forEach(file => {
-      console.log(`- ${file}`)
+      console.log(`- ${chalk.green(file)}`)
     })
   } catch (err) {
     console.log(`Error Unarchiving ${err}`)
