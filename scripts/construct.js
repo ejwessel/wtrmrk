@@ -53,7 +53,6 @@ async function main() {
 
   // copy flattened contracts and deconstruct.js
   fs.copySync(contractFlattenedDir, archiveWorkspace)
-  // fs.copySync('./scripts/deconstruct.js', `${archiveWorkspace}deconstruct.js`)
 
   //zip flattened contracts
   try {

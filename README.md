@@ -13,7 +13,7 @@ yarn clean; NODE_NO_WARNINGS=1 ADDRESSES=0x493d7ca07ccce5b66d244e305c11838f9cf66
  yarn clean; NODE_NO_WARNINGS=1 DEPLOY=true yarn deconstruct
  ```
 
- ## Verify
+ ## Verify an existing contract
  ```
  yarn clean; URI=https://ipfs.io/ipfs/QmQQEh5ivWF5oBSGUtnic3JFKeukNVQKSsGsokys252P5X CONTRACT_ADDRESS=0xb6a36d2fdb35862d2efdd7aa28080241d9525a2b yarn verify  --network rinkeby
  ```
