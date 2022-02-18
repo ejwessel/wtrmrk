@@ -5,6 +5,7 @@ const { extractProofFromFile } = require('./utilities/merkle')
 const { unarchive } = require('./utilities/archive')
 const { execute } = require('./utilities/execute')
 const { setupWorkspaces } = require('./utilities/workspace')
+const { verify } = require('./utilities/verify')
 const pinataSDK = require('@pinata/sdk');
 
 const { archiveDir, archiveWorkspace, contractDir, nftContractName } = require('./constants')
@@ -45,19 +46,20 @@ async function main() {
   }
 
   const [deployer, nonWhitelisted] = await ethers.getSigners();
-  const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, deployer.address)
+  const selectedSigner = nonWhitelisted
+  const deployerProof = extractProofFromFile(`${archiveWorkspace}proofs.json`, selectedSigner.address)
   const nftFactory = await ethers.getContractFactory(nftContractName);
   const beforeBal = await deployer.getBalance()
 
-  // Creator/Whitelisted
-  // const nft = await nftFactory.connect(deployer).deploy([deployerProof], uri)
+  // Case 1: Creator/Whitelisted
+  // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri)
 
-  // NonWhitelisted !Pays
-  // const nft = await nftFactory.connect(nonWhitelisted).deploy([deployerProof], uri, { value: 0.0 }) // should reject
+  // Case 2: NonWhitelisted !Pays
+  // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: 0.0 }) // should reject
 
-  // NonWhitelisted Pays
+  // Case 3: NonWhitelisted Pays
   const oneEther = ethers.BigNumber.from("1000000000000000000");
-  const nft = await nftFactory.connect(nonWhitelisted).deploy([deployerProof], uri, { value: oneEther })
+  const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: oneEther })
   const afterBal = await deployer.getBalance()
   console.log(`${ethers.utils.formatEther(beforeBal)} Ether`, `${ethers.utils.formatEther(afterBal)} Ether`)
 
@@ -72,6 +74,7 @@ async function main() {
   console.log(`Sig: ${chalk.green(sig)}`)
   console.log(`Base URI: ${chalk.green(baseURI)}`)
 
+  // await verify(nftContractName, nft.address, selectedSigner)
 
   // verify the contract block explorer
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
