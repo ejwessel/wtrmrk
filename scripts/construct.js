@@ -24,8 +24,8 @@ async function main() {
   console.log('proof mapping created')
 
   //NOTE: reads signers from hardhat.config.js
-  const accounts = await ethers.getSigners();
-  const signer = accounts[0]
+  const [signer] = await ethers.getSigners();
+  console.log(`Selected Account: ${chalk.green(signer.address)}`)
   const sig = await signer.signMessage(JSON.stringify(proofObj))
   proofObj['sig'] = sig
   console.log('signature added to proof mapping')
@@ -64,12 +64,12 @@ async function main() {
 
   //steganographically add to the chosen image
   try {
-    await execute('stegify', ['encode', '--carrier', 'images/pi_2.png', '--data', `${archiveDir}data.zip`, '--result', 'test.png'])
+    await execute('stegify', ['encode', '--carrier', process.env.INPUT, '--data', `${archiveDir}data.zip`, '--result', process.env.OUTPUT])
   } catch (err) {
     console.log(`Error Steganographic write ${err}`)
     throw err
   }
-  console.log(chalk.green("Success! Image Encoded"))
+  console.log(`Success! Image encoded to ${chalk.green(process.env.OUTPUT)}`)
 }
 
 main()

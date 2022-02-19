@@ -18,13 +18,13 @@ async function main() {
 
   const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECRET_KEY);
 
-  const { IpfsHash } = await pinata.pinFromFS('test.png')
+  const { IpfsHash } = await pinata.pinFromFS(process.env.INPUT)
   const uri = `https://ipfs.io/ipfs/${IpfsHash}`
   console.log(`Image uploaded to IPFS at ${chalk.green(uri)}`)
 
   //steganographically extract archive
   try {
-    await execute('stegify', ['decode', '--carrier', 'test.png', '--result', `${archiveDir}data.zip`])
+    await execute('stegify', ['decode', '--carrier', process.env.INPUT, '--result', `${archiveDir}data.zip`])
     console.log(chalk.green('Success! Image Decoded'))
   } catch (err) {
     console.log(`Error Steganographic write ${err}`)
@@ -82,8 +82,8 @@ async function main() {
 
   // verify the contract block explorer
   if (network.name !== 'localhost' && network.name !== 'hardhat') {
-    console.log(chalk.yellow("Waiting 30s for contract to propogate before verification..."))
-    await sleep(30000)
+    console.log(chalk.yellow("Waiting 60s for contract to propogate before verification..."))
+    await sleep(60000)
     await hre.run("verify:verify", {
       address: nft.address,
       constructorArguments: [[deployerProof], uri]
