@@ -72,13 +72,13 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 * We learned a lot about digital watermarking
 * We learned a bit about polyglot files
 # Improvements:
-* This method does not guard against compression or changes to the images. Steganography is information hiding, but digital watermarking tries to control robustness and needs to have a resilient signal 
+* This method does not guard against compression or changes to the images. Steganography is information hiding, but digital watermarking tries to control robustness and needs to have a resilient signal.
 * This method unfortunately does not prevent the image from being overwritten or copied by having a picture taken of it. An approach where using a signal might be another way to do this.
-* Turn the image into a Polyglot file
-* Polyglots are generally used for Remote Code Execution (RCE)
+* Turn the image into a Polyglot file.
+* Polyglots are generally used for Remote Code Execution (RCE).
 * Adding the encoding does increase image size. This subsequently means the 'carrier' image needs to be large enough to contain the encoded data.
 
 # Applicability:
-* Digital Rights Management (DRM)
+* Digital Rights Management (DRM).
 * It’s possible to steganographically encode into audio.
 * One could even embed the code into an inaudible audio signal and use processing to listen to the code and generate the code from that.
