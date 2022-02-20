@@ -38,7 +38,7 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 * We found NFT marketplaces inundated with fake art and marketplaces are playing whack-a-mole; effort to take stolen art is a resource sink.
 * We found the scales tipped in favor of thieves; repercussions are nilch - addresses are free!
 * We found that not all artists agree with NFTs.
-* We wanted to put more control back into the artist’s hands. It shouldn’t be that artists have control over what they create, but not over how their creations are sold. 
+* We wanted to put more control back into the artist’s hands. It shouldn’t only be that artists have control over what they create, but also over how their creations are sold. 
 # What it does:
 * WTRMRK allows an artist to define the parameters and rules for how their art should behave when their art is minted as an NFT.
 * It does this by stenographically encoding logic into the image: the contract, the signature, and the whitelist.
