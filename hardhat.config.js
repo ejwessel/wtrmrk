@@ -18,7 +18,8 @@ module.exports = {
       forking: {
         url: getNetworkUrl('mainnet'),
       },
-      accounts: [{ privateKey: process.env.PRIVATE_KEY, balance: '10000000000000000000000' }],
+      // uncomment this if wanting to use private key address
+      // accounts: [{ privateKey: process.env.PRIVATE_KEY, balance: '10000000000000000000000' }],
     },
     mainnet: {
       url: getNetworkUrl('mainnet'),
@@ -53,8 +54,8 @@ module.exports = {
     },
   },
   // Disable the following when running the tests
-  solpp: {
-    "cwd": "./contracts",
-    "noFlatten": false
-  }
+  // solpp: {
+  //   "cwd": "./contracts",
+  //   "noFlatten": false
+  // }
 }

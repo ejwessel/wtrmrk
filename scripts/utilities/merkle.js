@@ -15,7 +15,7 @@ function merklize(elements) {
 function getProof(tree, address) {
   leaf = keccak256(address)
   proof = tree.getHexProof(leaf)
-  return proof[0] ? proof[0] : undefined
+  return proof.length > 0 ? proof : undefined
 }
 
 function createProofsObj(addresses) {

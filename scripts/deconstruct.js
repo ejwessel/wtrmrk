@@ -55,7 +55,7 @@ async function main() {
   const beforeBal = await deployer.getBalance()
 
   // Case 1: Creator/Whitelisted
-  const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri)
+  const nft = await nftFactory.connect(selectedSigner).deploy(deployerProof, uri)
 
   // Case 2: NonWhitelisted !Pays
   // const nft = await nftFactory.connect(selectedSigner).deploy([deployerProof], uri, { value: 0.0 }) // should reject
