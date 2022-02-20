@@ -1,4 +1,4 @@
-<img width="20%" height="20%" src="https://raw.githubusercontent.com/ejwessel/wtrmrk/master/WTRMRK.png">
+<img src="https://raw.githubusercontent.com/ejwessel/wtrmrk/master/WTRMRK.png">
 
 ## Prerequsites
 https://github.com/DimitarPetrov/stegify
