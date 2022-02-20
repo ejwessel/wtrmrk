@@ -3,8 +3,6 @@ const { expect } = require("chai");
 const keccak256 = require('keccak256');
 const { MerkleTree } = require('merkletreejs')
 const timeMachine = require('ganache-time-traveler');
-const fs = require("fs-extra");
-const config = require('hardhat.config.js')
 
 // NOTE: DISABLE solpp WITHIN hardhat.config.js WHEN RUNNING TESTS!
 // NOTE: The following tests are run against the constructed state of:
@@ -54,7 +52,7 @@ describe("Test ERC721Image", function () {
     const nft = await nftFactory.connect(deployer).deploy(proof, 'www.google.com')
     expect(await nft.fee()).to.equal(ethers.BigNumber.from("1000000000000000000"))
     expect(await nft.root()).to.equal('0xc83aea70ecfb16a08a9aed5f227872b05473debe80e5bc7f300839be8feb8b36')
-    expect(await nft.sig()).to.equal('0x6d735763fec3449b427bb24f0202d89bcdee471b919d3890b4cbb8a7e6dfdb7c7f97b6b6b4c97713fd5c68a231bd036460bd511c25dc1b1d378a24d77bdcbb6d1c')
+    expect(await nft.sig()).to.equal('0xacf34321d18a38e62514701d637f3f2974db2f3c109a9a5db0895d63896cf9d96ecc6fd0668ca8123b7d34b73fe0094d707cee4d320fbf7e094190b8ea82eed71c')
     expect(await nft.baseURI()).to.equal('www.google.com')
   })
 

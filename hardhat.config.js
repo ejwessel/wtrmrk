@@ -53,9 +53,9 @@ module.exports = {
       avalanche: process.env.SNOWTRACE_API_KEY,
     },
   },
-  // Disable the following when running the tests
-  // solpp: {
-  //   "cwd": "./contracts",
-  //   "noFlatten": false
-  // }
+  Disable the following when running the tests
+  solpp: {
+    "cwd": "./contracts",
+    "noFlatten": false
+  }
 }
