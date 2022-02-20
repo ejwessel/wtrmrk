@@ -26,6 +26,7 @@ yarn clean; NODE_NO_WARNINGS=1 INPUT=steg.png DEPLOY=true yarn deconstruct
 yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ7Xr CONTRACT_ADDRESS=0x7bD0707a5A3142fBf8Ff63634a5F9aD64e602230 yarn verify --network rinkeby
 ```
 
+***[SHORT VIDEO DEMO](https://www.youtube.com/watch?v=ucK3RYQMlPE)***
 # Inspiration
 * https://twitter.com/NFTtheft
 * We found a number of artists getting their artwork stolen and sold from under them without compensation and any upside.
