@@ -75,6 +75,7 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 * Including the package.json contents with regard to solidity compiler version and contract versions for determinism in compilation of the contract.
 * This method does not guard againstm, "compression, rotation, cropping, additive noise, and quantization". Steganography is information hiding, but digital watermarking tries to control robustness and needs to have a resilient signal.
 * This method unfortunately does not prevent the image from being overwritten or copied by having a picture taken of it. An approach where using a signal might be another way to do this.
+* There may be a clever way to include metadata from the image such that it's a part of the 'DNA' of the image and cannot be removed.
 * Turn the image into a Polyglot file.
 * Polyglots are generally used for Remote Code Execution (RCE).
 * Adding the encoding does increase image size. This subsequently means the 'carrier' image needs to be large enough to contain the encoded data.
