@@ -59,8 +59,6 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 * [Stegify](https://github.com/DimitarPetrov/stegify) tool by Dimitar Petrov. Encodes using [Least Significant Bit (LSB)](https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography)
 * [IPFS](https://ipfs.io/) for image referencing
 # Latent Benefits:
-* Gas benefits, parameters are hardcoded into the image making it cheap.
-  * 2836372 gwei * $2755.49 = ~$7.8 for a deployment
 * Artist’s don’t need to spend gas on deployment; artists can still “lazy mint”.
 # The Challenge:
 > “When the art is minted as an NFT, the logic is extracted from and referenced as a source of truth for the deployment.”
