@@ -17,8 +17,8 @@ module.exports = {
     hardhat: {
       forking: {
         url: getNetworkUrl('mainnet'),
-        accounts: [process.env.PRIVATE_KEY]
       },
+      accounts: [{ privateKey: process.env.PRIVATE_KEY, balance: '10000000000000000000000' }],
     },
     mainnet: {
       url: getNetworkUrl('mainnet'),
