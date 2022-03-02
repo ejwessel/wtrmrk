@@ -61,7 +61,6 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 > “When the art is minted as an NFT, the logic is extracted from and referenced as a source of truth for the deployment.”
 * There needs to be marketplace buy in, again there’s no validation or verification of an image being uploaded as being legitimate.
 * Marketplaces currently sanitize their media (or should be) before sending to a user. This removes noise and often times steganographic data. There are ways to perform client side code execution through an image.
-* Marketplaces currently ‘manage’ the problem, they haven’t solved the problem.
 # What we learned:
 * We learned a lot about the interesting use cases for steganography and digital watermarking as well as their limitations.
 * We learned a bit about polyglot files and their various applications. 
