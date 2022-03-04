@@ -34,7 +34,7 @@ yarn clean; URI=https://ipfs.io/ipfs/QmTgobRZQ36vKMJCCF4VYhi7p1bh2JBidQ73MJmMwzZ
 * Marketplaces do not provide adequate validation processes to verify the authenticity of image assets. 
 * The process to take stolen art down by marketplaces is cumbersome and needlessly bureaucratic.
 * NFT marketplaces either do not have the proper resources to combat NFT theft or are currently not prioritizing the issue. 
-* Artists should have control over how their works are sold, so we want to put control back into their hands. 
+* Artists should have control over how their works are sold; we want to put more control back into the hands of artists. 
 # What it does:
 * WTRMRK allows artists to define the parameters and rules for how their art should behave when minted as an NFT.
 * The logic for the contract, the signature, and the whitelist are stenographically encoded into the image.
